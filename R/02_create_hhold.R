@@ -124,10 +124,10 @@ shocks_yes_no <- shocks |>
   # drawing on root name and code
 	dplyr::mutate(varname = paste0(shocks_var, "__", code)) |>
   # extract this from the data frame
-	pull(varname) |>
+	dplyr::pull(varname) |>
 	purrr::map_dfc(
     # for each variable, create a data frame of fake data
-    .f = ~ tibble(
+    .f = ~ tibble::tibble(
       !!rlang::sym(.x) := sample(
         x = c(1, 0),
         size = n_obs,

@@ -70,7 +70,7 @@ select_spouse <- function(
 
     df_w_spouse <- df |>
       dplyr::mutate(
-        {{var}} := if_else(
+        {{var}} := dplyr::if_else(
           condition = dplyr::row_number() == spouse_index,
           true = spouse_val,
           false = {{var}}

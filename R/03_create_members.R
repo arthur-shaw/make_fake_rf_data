@@ -101,7 +101,7 @@ members_core_df <- hhold_ids |>
 # ------------------------------------------------------------------------------
 
 
-age_rules <- tibble(
+age_rules <- tibble::tibble(
   rel_code = list(
     1, # HEAD (1)
     2, # SPOUSE (2)
