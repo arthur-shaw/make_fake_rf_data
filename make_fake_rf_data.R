@@ -45,8 +45,8 @@ purrr::walk(
 scripts <- c(
   "00_ingest_qnr_metadata.R",
   "01_create_sample.R",
-  "01_create_hhold.R",
-  "02_create_members.R"
+  "02_create_hhold.R",
+  "03_create_members.R"
 )
 
 purrr::walk(
