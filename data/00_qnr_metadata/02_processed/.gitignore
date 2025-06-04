@@ -1,0 +1,3 @@
+# do not track RDS data files
+# since they may contain non-reproducible content (e.g., timestamp)
+*.rds
