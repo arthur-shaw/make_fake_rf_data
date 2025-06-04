@@ -56,19 +56,19 @@ val_lbls <- c(
 # construct data
 # ==============================================================================
 
-# set the number of observations
-n_obs <- 10
-
 # set a random seed for reproducibility
 base::set.seed(8765309)
 
 # create household-level data with SuSo IDs
-hholds_core <- fabricatr::fabricate(
-  N = n_obs,
-  # ID variables
-  interview__id = uuid::UUIDgenerate(n = n_obs)
-) |>
-dplyr::select(-ID)
+hholds_core <- survey_sample_w_probabilties |>
+  # expand PSU-level data into hhold-level data
+  # creating a number of hhold obs per PSU equal to `n_hholds`
+	tidyr::uncount(weights = n_hholds) |>
+  # add a SuSo-style interview ID as the first column
+	dplyr::mutate(
+    interview__id = uuid::UUIDgenerate(n = dplyr::n()),
+    .before = 1
+  )
 
 # construct
 hhold_vars_df <- val_lbls |>
