@@ -129,7 +129,7 @@ age_rules <- tibble::tibble(
     # HEAD (1)
     function(head_age) head_age,
     # SPOUSE (2)
-    function(head_age) sample((head_age - 5):(head_age + 5), 1),
+    function(head_age) sample(c((head_age - 5):(head_age + 5)), 1),
     # CHILD (OWN CHILD/STEP CHILD/ ADOPTED CHILD) (3)
     # SON-IN-LAW/DAUGHTER-IN-LAW (10)
     # NIECE/NEPHEW (6)
