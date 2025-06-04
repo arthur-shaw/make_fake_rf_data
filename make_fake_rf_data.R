@@ -21,7 +21,7 @@ data_micro <- fs::path(data_dir, "01_microdata")
 # ------------------------------------------------------------------------------
 
 # set a random seed for reproducibility
-base::set.seed(8765309)
+base::set.seed(8675309)
 
 # ------------------------------------------------------------------------------
 # load utility functions
