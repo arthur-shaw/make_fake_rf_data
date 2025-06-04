@@ -12,7 +12,7 @@ proj_root <- here::here()
 script_dir <- fs::path(proj_root, "R")
 
 # data
-data_dir <- fs::path(proj_rootm, "data")
+data_dir <- fs::path(proj_root, "data")
 data_meta <- fs::path(data_dir, "00_qnr_metadata")
 data_micro <- fs::path(data_dir, "01_microdata")
 
