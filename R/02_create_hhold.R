@@ -67,6 +67,9 @@ hholds_core <- survey_sample_w_probabilties |>
     .before = 1
   )
 
+# compute the number of households for later use
+n_obs <- nrow(hholds_core)
+
 # construct
 hhold_vars_df <- val_lbls |>
   # create named lists of sampled values
