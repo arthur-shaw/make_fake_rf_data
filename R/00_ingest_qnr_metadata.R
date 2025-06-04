@@ -30,6 +30,6 @@ saveRDS(
   object = reusable_categories_df,
   file = here::here(
     "data", "00_qnr_metadata", "02_processed",
-    "reusable_categories_df"
+    "reusable_categories_df.rds"
   )
 )
