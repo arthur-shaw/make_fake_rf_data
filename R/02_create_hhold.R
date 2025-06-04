@@ -56,9 +56,6 @@ val_lbls <- c(
 # construct data
 # ==============================================================================
 
-# set a random seed for reproducibility
-base::set.seed(8765309)
-
 # create household-level data with SuSo IDs
 hholds_core <- survey_sample_w_probabilties |>
   # expand PSU-level data into hhold-level data
