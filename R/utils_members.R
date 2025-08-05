@@ -63,10 +63,22 @@ select_spouse <- function(
     var_txt <- rlang::as_label(rlang::enquo(var))
     head_index <- which(df[[var_txt]] == 1)
 
-    spouse_index <- sample(
-      x = setdiff(x = seq_len(nrow(df)), y = head_index),
-      size = 1
-    )
+    # choose a row for the spouse
+    # if df has head's row and another row, choose the other row
+    # this avoids a strange problem where sampling from an atomic vector
+    # can yield values not in that vector
+    if (nrow(df) == 2) {
+      spouse_index <- setdiff(
+        x = seq_len(nrow(df)),
+        y = head_index
+      )
+    # otherwise, choose randomly among the remaining rows
+    } else {
+      spouse_index <- sample(
+        x = setdiff(x = seq_len(nrow(df)), y = head_index),
+        size = 1
+      )
+    }
 
     df_w_spouse <- df |>
       dplyr::mutate(
@@ -76,6 +88,8 @@ select_spouse <- function(
           false = {{var}}
         )
       )
+
+    return(df_w_spouse)
 
   } else {
 
