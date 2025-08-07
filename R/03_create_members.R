@@ -7,11 +7,7 @@
 # ------------------------------------------------------------------------------
 
 demographic_vars <- c(
-  # covered by other operations
-    # "s1q2", # member gender
-    # "s1q3", # relationship to head
-    # "s1q4alt", # member age
-    # "s1q7", # marital status
+  # variables not covered by other operations
   "s1q6" # birth registered
 )
 
@@ -48,6 +44,22 @@ val_lbls <- c(
   health_vars,
   functioning_vars,
   digital_vars
+) |>
+  # set names of vector as its character value
+  purrr::set_names() |>
+  purrr::map(
+    .f = ~ susometa::get_answer_options(
+      qnr_df = qnr_df,
+      categories_df = reusable_categories_df,
+      varname = !!rlang::sym(.x)
+    )
+  )
+
+basic_member_var_lbls <- c(
+  "s1q2", # member gender
+  "s1q3", # relationship to head
+  "s1q4alt", # member age
+  "s1q7" # marital status
 ) |>
   # set names of vector as its character value
   purrr::set_names() |>
@@ -247,6 +259,8 @@ members_vars_df <- val_lbls |>
 # ------------------------------------------------------------------------------
 
 members <- dplyr::bind_cols(members_key_info, members_vars_df) |>
+  # apply value labels
+	labelled::set_value_labels(.labels = basic_member_var_lbls) |>
   dplyr::mutate(
     # remove health consultation answer if had no health event
     s3q8 = dplyr::if_else(
