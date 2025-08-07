@@ -141,6 +141,12 @@ hholds <- hholds_core |>
 	dplyr::bind_cols(
     hhold_vars_df, shocks_yes_no
   ) |>
+  # label ID variables
+  labelled::set_value_labels(.labels = list(
+    region = region,
+    urb_rur = urb_rur
+  )) |>
+  # label non-ID household variables
 	labelled::set_value_labels(.labels = val_lbls) |>
 	# replace values with logical missing based on skip patterns
   dplyr::mutate(
