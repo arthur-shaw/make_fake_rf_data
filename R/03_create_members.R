@@ -261,6 +261,7 @@ members_vars_df <- val_lbls |>
 members <- dplyr::bind_cols(members_key_info, members_vars_df) |>
   # apply value labels
 	labelled::set_value_labels(.labels = basic_member_var_lbls) |>
+	labelled::set_value_labels(.labels = val_lbls) |>
   dplyr::mutate(
     # remove health consultation answer if had no health event
     s3q8 = dplyr::if_else(
