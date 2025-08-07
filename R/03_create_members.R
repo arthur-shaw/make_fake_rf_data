@@ -311,5 +311,5 @@ members <- dplyr::bind_cols(members_key_info, members_vars_df) |>
 
 haven::write_dta(
   data = members,
-  path = here::here("data", "01_microdata", "rf_members.dta")
+  path = here::here("data", "01_microdata", "members.dta")
 )
