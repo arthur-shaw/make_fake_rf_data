@@ -124,7 +124,8 @@ assign_other_relationships <- function(
         true = sample(
           x = relationship_codes,
           prob = relationship_probs,
-          size = nrow(df)
+          size = nrow(df),
+          replace = TRUE
         ),
         false = {{var}}
       )
