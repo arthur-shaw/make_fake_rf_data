@@ -82,25 +82,71 @@ basic_member_var_lbls <- c(
 # ingest household data, keeping the IDs to build on
 hhold_ids <- here::here("data", "01_microdata", "rf_hholds.dta") |>
   haven::read_dta() |>
-  dplyr::select(interview__id)
+  # specify average household size by stratum
+  # using/adapting figures from here: https://www.facebook.com/RGPH5/posts/rgph2019_r%C3%A9sultats_pr%C3%A9liminairesle-rgph-2019-a-d%C3%A9nombr%C3%A9-3-907-094-m%C3%A9nages-au-bur/720600455327444/
+  dplyr::select(interview__id, region, urb_rur) |>
+	dplyr::mutate(
+    mean_hhsize = dplyr::case_when(
+      # Boucle du Mouhoun (2) 5.3
+      region == 2 & urb_rur == 1 ~ 5.1,
+      region == 2 & urb_rur == 2 ~ 5.5,
+      # Cascades (12) 5.6
+      region == 12 & urb_rur == 1 ~ 5.5,
+      region == 12 & urb_rur == 2 ~ 5.8,
+      # Centre (11) 4.2
+      region == 11 & urb_rur == 1 ~ 3.5,
+      region == 11 & urb_rur == 2 ~ 4.5,
+      # Centre-Est (10) 5.4
+      region == 10 & urb_rur == 1 ~ 4.5,
+      region == 10 & urb_rur == 2 ~ 5.6,
+      # Centre-Nord (6) 5.9
+      region == 6 & urb_rur == 1 ~ 5.1,
+      region == 6 & urb_rur == 2 ~ 6.2,
+      # Centre-Ouest (7) 5.7
+      region == 7 & urb_rur == 1 ~ 5.2,
+      region == 7 & urb_rur == 2 ~ 6,
+      # Centre-Sud (13) 5.4
+      region == 13 & urb_rur == 1 ~ 4.35,
+      region == 13 & urb_rur == 2 ~ 5.7,
+      # Est (4) 6.1
+      region == 4 & urb_rur == 1 ~ 5.1,
+      region == 4 & urb_rur == 2 ~ 6.5,
+      # Hauts-Bassins (1) 5.0
+      region == 1 & urb_rur == 1 ~ 4.95,
+      region == 1 & urb_rur == 2 ~ 5.2,
+      # Nord (9) 5.8
+      region == 9 & urb_rur == 1 ~ 5,
+      region == 9 & urb_rur == 2 ~ 6.3,
+      # Plateau Central (8) 5.8
+      region == 8 & urb_rur == 1 ~ 4.95,
+      region == 8 & urb_rur == 2 ~ 6.1,
+      # Sahel (3) 4.7
+      region == 3 & urb_rur == 1 ~ 4.5,
+      region == 3 & urb_rur == 2 ~ 4.9,
+      # Sud-Ouest (5) 5.0
+      region == 5 & urb_rur == 1 ~ 4.7,
+      region == 5 & urb_rur == 2 ~ 5.1,
+      .default = NA
+    )
+  )
 
 # create the scaffolding for a member-level data frame
 members_core_df <- hhold_ids |>
   # create a random household size per household
+  # drawing from a truncated Poisson distribution
+  # where the mean is defined by the stratum-specific values above
+  # performing the coputation row-wise, for now, to avoid coding complications
+  dplyr::rowwise() |>
 	dplyr::mutate(
-    n_members = sample(
-      x = c(1:5),
-      size = nrow(hhold_ids),
-      prob = c(
-        0.1,
-        0.1,
-        0.4,
-        0.2,
-        0.2
-      ),
-      replace = TRUE
-    )
+    n_members = round(truncdist::rtrunc(
+      n = 1,
+      spec = "pois",
+      a = 1,
+      b = 20,
+      lambda = mean_hhsize
+    ))
   ) |>
+  dplyr::ungroup() |>
   # create a number of duplicate rows equal to the household size
 	tidyr::uncount(
     weights = n_members,
